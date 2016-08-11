@@ -1,0 +1,26 @@
+
+sample (10000, 35) ##primer numero intervalo apartir del 0 y el segundo tamaño de la muestra 
+
+## base de datos de 4 variables (nombre, edad, sexo y tipo de educación)
+
+nombres <- c ("sergio", "alan", "betzabeth", "judith", "rodrigo", "eric", "diego", "angel")
+edad <- c(36, 20, 23, 20, 21, 21, 22, 21)
+sexo <- c("hombre", "hombre", "mujer", "mujer", "hombre", "hombre", "hombre", "hombre")
+teducacion <- c("publica", "publica", "publica", "publica", "privada", "publica", "publica", "publica")
+
+## generamos una base en forma de matriz 
+
+base1 <- matrix (c(edad, nombres, sexo, teducacion))
+base1.1 <- data.frame(edad, nombres, sexo, teducacion)
+
+## vamos a utilizar la funcion table 
+## la funcion table se utiliza para conocer la frecuencia de las diferentes variables
+
+table (base1.1$edad)
+table (base1.1$sexo)
+
+attach(base1.1)## apartir de esta funcion solo se trabajara con la base 1.1
+table(edad)
+detach(base1.1) ##cerrar attach
+
+summary(base1.1$edad) #cual es el menor y el mayor... 
