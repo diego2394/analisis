@@ -1,0 +1,23 @@
+### tarea de las clases 
+SDEMT215$Clase1<-factor(SDEMT215$Clase1,levels=c(1,2),labels= c("Pob.Econ.Act","Pob.NO.Econ.Act"))
+wtd.table(SDEMT215$Clase1)
+
+SDEMT215$Clase2<-factor(SDEMT215$Clase2,levels=c(1,2,3,4),labels= c("Pob.Ocupada","Pob.Desocupada","Disponibles","NO.Disponibles"))
+wtd.table(SDEMT215$Clase2)
+
+SDEMT215$Clase3<-factor(SDEMT215$Clase3,levels=c(1,2,3,4,5,6,7),labels= c("Ocu.Pleno","Ocu.SinPago","Ocu.Ausente.con Nexo","Ocu.Ausente.con Retorno","DEs. Indicadoeres","DEs. con busqueda","Desocupados ausentes"))
+wtd.table(SDEMT215$Clase3)
+
+ETIQUETAR EN LA MISMA VARIABLE
+SDEMT215$POS_OCU<-factor(SDEMT215$POS_OCU,levels=c(1,2,3,4,5),labels= c("sUBORDINADOS","EMPLEADORES","cUENTA PROPIA","SIN PAGO", "NE"))
+wtd.table(SDEMT215$POS_OCU)
+
+
+ETIQUETAR EN LA MISMA VARIABLE
+SDEMT215$SEG_SOC<-factor(SDEMT215$SEG_SOC,levels=c(1,2,3),labels= c("CON ACCESO","SIN ACCESO","NE"))
+wtd.table(SDEMT215$SEG_SOC)
+
+ETIQUETAR EN LA MISMA VARIABLE
+SDEMT215$RAMA<-factor(SDEMT215$RAMA,levels=c(1,2,3,4,5,6,7),labels= c("CONSTRUCCIÓN","iND. MANUFACTURERA","COMERCIO","SERVICIOS", "AGROPECUATRIO","oTROS","NE"))
+wtd.table(SDEMT215$RAMA)
+
