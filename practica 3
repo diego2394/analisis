@@ -1,0 +1,81 @@
+
+install.packages("foreign")
+require (foreign)
+SDEMT215.dbf <- data.frame(read.dbf("SDEMT215.dbf"))
+
+View(SMDEMT215)
+install.packages("questionr")
+require (questionr)
+wtd.table(SMDEMT215$POS_OCU)
+wtd.table(SMDEMT215$POS_OCU,nashow = TRUE)
+
+##4.1 recodificacion de variables numericas (rangos)
+
+
+
+SDEMT215.dbf$EDAD11[as.numeric(SDEMT215.dbf$EDA) >= 0 & as.numeric(SDEMT215.dbf$EDA) <=10] <- 1
+SDEMT215.dbf$EDAD11[as.numeric(SDEMT215.dbf$EDA) >= 11 &as.numeric(SDEMT215.dbf$EDA) <=20] <- 2
+SDEMT215.dbf$EDAD11[as.numeric(SDEMT215.dbf$EDA) >= 21 &as.numeric(SDEMT215.dbf$EDA) <=30] <- 3
+SDEMT215.dbf$EDAD11[as.numeric(SDEMT215.dbf$EDA) >= 31 &as.numeric(SDEMT215.dbf$EDA) <=40] <- 4
+SDEMT215.dbf$EDAD11[as.numeric(SDEMT215.dbf$EDA) >= 41] <- 5 
+## lista de variables
+ls (SDEMT215.dbf) 
+
+table (SDEMT215.dbf$EDAD11)
+
+
+class(SDEMT215.dbf$ENT)
+
+SDEMT215.dbf$ENT <-  (as.character (as.numeric(SDEMT215.dbf$ENT)))
+
+## metodo 3
+
+
+SDEMT215.dbf$EDAD11 <- ifelse(as.numeric(SDEMT215.dbf$EDA) >= 0 & as.numeric(SDEMT215.dbf$EDA) <= 10,1,
+                              ifelse(as.numeric(SDEMT215.dbf$EDA) >= 11 & as.numeric(SDEMT215.dbf$EDA) <= 20,2,
+                                     ifelse(as.numeric(SDEMT215.dbf$EDA) >= 21 & as.numeric(SDEMT215.dbf$EDA) <= 30,3,
+                                            ifelse(as.numeric(SDEMT215.dbf$EDA) >= 31 & as.numeric(SDEMT215.dbf$EDA) <= 40,4,5))))
+table (SDEMT215.dbf$EDAD11)
+
+
+##4.1 recodificacion de variables tipo caracter 
+
+class (SDEMT215.dbf$R_DEF)
+
+SDEMT215.dbf$VALIDO[as.character(SDEMT215.dbf$R_DEF)!= "00"] <- "entrevista completa"
+SDEMT215.dbf$VALIDO[as.character(SDEMT215.dbf$R_DEF)== "00"] <- "entrevista completa"
+
+wtd.table(SDEMT215.dbf$VALIDO)
+
+## == doble igualdad ! no son igual a cero
+
+## 4.1 documentacin
+
+################################################
+
+##5 subconjunto de datos
+
+##5.1 seleccionando variables de interes 
+
+# metodo 1 
+
+var <- c("R_DEF", "LOC", "MUN", "C_RES" )  ## crear variables que interesan ##
+
+newdata1 <- SDEMT215.dbf[,var]   ## primera renglon y la segunda columna
+
+
+
+## seleccionar casos u observaciones
+## funcion ... subset()
+
+mujer <- subset(SDEMT215.dbf,SDEMT215.dbf$SEX == 2 )
+
+table (mujer$SEX )
+
+mujer1 <- subset(mujer, mujer$CD_A == "02" | mujer$CD_A == "16" )
+
+table (mujer1$CD_A)
+
+class (mujer$CD_A)
+
+mujer$CD_A <- as.character(mujer$CD_A)
