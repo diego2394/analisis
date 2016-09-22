@@ -1,0 +1,63 @@
+
+base1 <- data.frame(eco, est)
+
+
+base1$ajuste.mod1 <- fitted(mod1)  ##valores ajustados
+base1$residuales.mod1 <- residuals(mod1)  ##residuos del modelo
+base1$rstudent.mod1 <- rstudent(mod1)    ##residuos estudentizados
+
+##estas variables se utilizan para comprobar los supuestos...
+## supuesto de normalidad... es que los reciduos tengan una distribucion normal
+## para conocer la normalidad de utiliza la prubba de shapiro para analizar los recvciduos
+
+shapiro.test (base$rstudent.mod1)
+
+View(base1)
+
+
+##purea de hipoteisi shapiro test
+##Ho tiene una distribucion normal 
+##Ha la prueba no tiene distribucion normal 
+##tenemos un pvalue de .8162 no se rechaza la hipotesis nula
+##por lo tanto se acepta que hay normalidad
+####resultado grafico
+
+qqnorm (base1$rstudent.mod1, main = "Normal (0,1)")
+##se obtiene grafico de dispercion con la normal 0,1
+qqline (base1$rstudent.mod1)
+
+
+install.packages("lmtest")
+require(lmtest)
+bptest (mod1)
+## en esta prueba esperamos que haya homogeneidad de la varienza
+##ho si hay homogeneidad en las varianzas
+##ha no hay homogeneidad en las varianzas
+##en la prueba bptest obtenemos una pvalue de .6108 por lo tanto se rechaza la hipotesis nula 
+##es decir se acepta con 95% de nivel de confianza la Ho
+##para eso tenemos quie tener un pvalue mayor a .05 por lo que para mod1 de puede decir que hay homogeniedad  
+
+
+require (car)
+dwtest(mod1, alternative = "two.sided")
+
+##ho no hay autocorreccion en los residuos 
+##ha si  hay autocorreccion en los residuos 
+##genera un pvalue de .9142 por lo que no se rechaza la hipotesis nula
+##debido a que tenemos un pvalue mayor a .05
+## otra forma de evaluar es con un valor que se espara que este un un rango de 1.5 a 2.5 
+##si esta en este intervalo se dice que no hay autocorrelacion en los residuos
+
+
+
+plot (base1$residuales.mod1, pch= 172, ylab= "residuales", xlab= "in")
+abline(h=cor (base$est, base1$eco))
+
+
+limbase1 <- seq (min (base1$eco), max (base1$eco), length =10)
+limbase1 <- data.frame (limbase1)
+limbasep <- predict.lm (mod1, limbase1, interval = "prediction", se.fit =TRUE, data=base1 )
+
+head (limbasep$fit)
+
+matplot (limbase1, limbasep$fit, type = "1", xlab = "ingres", ylab = "estatura")
