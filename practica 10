@@ -1,0 +1,48 @@
+plot (capa, precio, pch = 12, xlab = "capa", ylab = "precio", main = "grafica de dispercion", col = "blue")
+cor(precio, capa, method ="pearson")
+cor.test(precio, calidad, method ="pearson")
+
+## comparacion de modelos
+## pretendemos seleccionar la mejorra (subconjunto de variebles independientesen este casi para la aplicacion del mmrm tenemos 
+## dos variables  independientes capacidad y calidad por lo que se propone compara tres modelos con 
+## la finalidad de aplicar el modelo de parsinomia, conocer variables innecesarias evitar multicolinealidad es decir se tienen mchas variables 
+## intentando explicar el modelo, ante estas variables se pueden comparar tres modelos 
+##1) precio ~ capacidad 
+##2) precio ~ calidad
+##3) precio ~ calidad + capacidad
+## como seleciionamos el modelo?
+## criterio de informacion akaike (AIC
+## el problema utiliza r^2 comparar modelos es que al introducir nuevas variables al modelo 
+##esta medida siempre crece 
+#### si estamos decidiendo cual de los modelos se ajusta mejor a los datos el modelo con mas variables indepencientes
+## mpre sera el mejor ajustado pórlo que se utiliza el AIC 
+
+
+
+## por tener mas variables se tiene 
+## AIC= (n)(log(SCR/n))+2k
+SCR - suma de cuadrados residuales 
+## n - numero de casos en el modelo 
+##k numero de variabkles indepoendientes 
+## el problema es que el unico criterio para el AIC es si el AIC es mayor, el modelo es peor 
+## si el AIC es menor, el modelo es mejor, es decir, esperamos un AIC mas pequeño 
+##el AIC nos va ayudar a elegir un modelo
+## el metodo mas recomendado es el step by step 
+## para R se utiliza la funcion step(), existen tres modalidaddes 
+##1) forward parte del coeficiente Bo y ahi va probanco las variables independientes para ver cual se acopla mas al modelo 
+## 2) backward R empieza con todas las varianbles ind y estudia sei AIC baja cuando hay cambio de variables 
+#3) h empieza con el forward de diferencia es que se realizan test para conocer la var indep util
+## metodo mas recomendablke es backward
+
+moch <- data.frame (precio, capa, calidad)
+cor(moch, use = "everything" , method = "pearson" )
+mod1 <- lm (precio ~ capa +calidad, data = moch)
+summary (mod1)
+step (mod1, direction = "backward" )
+## ** 99% confiable al modelo 
+
+
+## metodo both 
+ step (mod1, direction = "both")
+##si tenemos un resultado igual al de backward por la forma que construye este metodo ahora con el metodo de forward 
+ step (mod1, direction = "forward")
