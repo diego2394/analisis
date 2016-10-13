@@ -1,0 +1,27 @@
+bolsa <- data.frame(estrellas,operacion,uso,gama)
+bolsa1 <- lm(estrellas ~ operacion + uso + gama, data = bolsa)
+summary(bolsa1)
+
+#### prediccion  #####
+
+inter <- seq(min(bolsa$uso), max(bolsa$uso), length = length(bolsa$uso))
+predbolsa <- data.frame(gama = 3.5, operacion =2.5, uso = inter)
+#### generando prediccion o pronostico
+
+predi1 <- predict(bolsa1, predbolsa, interval = "prediction", se.fit = TRUE, data = bolsa)
+
+head(predi1$fit)
+
+## detectar multicolinealidad en el modelo... cuando un modelo tiene multi... en un mrm es cuando una variable independiente 
+## es combinacion lineal de otra varianle inf... es decir la multicolinealidad existe en una mrm
+## si hay fuerte correlacion en una o mas variables esto es cuando el coeficiente de correlacion es 1 
+## para detectar esta colinealidad se estima el factor de inflacion de la varianza (VIF)
+## este factor se calcula con funcion vif()
+##se recomiendan estos rangos 
+## FIV estado de los predictores
+## FIV=1 no correlacionados 
+## 1 < fiv < 5 moderadamente correlacionados 
+## fiv > 5 10 altamente correlacionados 
+install.packages("car")
+require(car)
+vif(bolsa1)
