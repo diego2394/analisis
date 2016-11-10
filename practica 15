@@ -1,0 +1,35 @@
+setwd("C:\\Users\\Sala-C27\\Desktop\\Nueva carpeta (3)")
+
+co1 <- read.dbf("coe1t216.dbf")
+CO2 <- read.dbf("coe2t216.dbf ")
+
+sdem <- read.dbf("sdemt216.dbf")
+
+install.packages("foreign")
+require (foreign)
+
+folio <- paste (sdem$CD_A, sdem$ent, sdem$CON, sdem$V_SEL, sdem$N_HOG, sdem$CD_A, sdem$H_MUD, sdem$N_REN)
+
+new <- data.frame(sdem, folio)
+new$folio
+
+folio <- paste(co1$CD_A, co1$ent, co1$CON, co1$V_SEL, co1$N_HOG, co1$CD_A, co1$H_MUD, co1$N_REN)
+new1 <- data.frame(co1, folio)
+
+folio <- paste(CO2$CD_A, CO2$ent, CO2$CON, CO2$V_SEL, CO2$N_HOG, CO2$CD_A, CO2$H_MUD, CO2$N_REN)
+new2 <- data.frame(CO2, folio)
+
+total <- merge(new, new1, by="folio",all.new = TRUE)
+
+total1 <- merge(new2, total, by="folio",all.new = TRUE)
+
+vew(total1)
+ls(new1)
+
+install.packages("questionr")
+require(questionr)
+table (total1$SEX, total1$p1)
+
+wtd.table(total1$EDA.new , weights=total1$FAC.new)
+
+sum(wtdtable(total1$EDA.new, weights=total1$FAC.new)
