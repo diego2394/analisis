@@ -1,0 +1,35 @@
+install.packages("foreign")
+require(foreign)
+install.packages("questionr")
+require(questionr)
+
+setwd(("C://Users//casa//Desktop"))
+
+cuestionario<-data.frame(read.dbf("motral2012_cuestionario.dbf"))
+empleo<-data.frame(read.dbf("motral2012_empleos.dbf"))
+
+folio<-paste(cuestionario$CD_A,cuestionario$ENT,cuestionario$CON, cuestionario$V_SEL,cuestionario$N_HOG,cuestionario$H_MUD,cuestionario$N_REN)
+x<-data.frame(cuestionario,folio)
+
+folio<-paste(empleo$CD_A,empleo$ENT,empleo$CON,empleo$V_SEL,empleo$N_HOG,empleo$H_MUD,empleo$N_REN)
+x1<-data.frame(empleo,folio)
+
+motral<-merge(x,x1,by = "folio",all.x = T,all.y = T)
+
+indep<-subset(motral,as.numeric(as.character(motral$P5))==3)
+wtd.table(indep$SEX,weights = indep$FAC)
+
+## poblacion que trabaja por su cuenta y no ahorra porque tiene ingresos insuficientes entre 18 y 50 años
+## por genero
+motral2012<-subset(motral,motral$P16==1 & motral$P5==3)
+wtd.table (motral2012$P16,weights=motral2012$FAC)
+wtd.table (motral2012$P5,weights=motral2012$FAC)
+wtd.table (motral2012$SEX,weights=motral2012$FAC)
+
+
+motral2012$EDA<-as.character(motral2012$EDA)
+class(motral2012$EDA)
+motral2012$EDA1[as.numeric(motral2012$EDA) >= 18 & as.numeric(motral2012$EDA)<= 50] <- 1
+table (motral2012$EDA1,motral2012$EDA)
+
+table (motral2012$SEX)
