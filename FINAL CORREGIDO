@@ -1,0 +1,119 @@
+install.packages("foreign")
+require(foreign)
+install.packages("questionr")
+require(questionr)
+install.packages("stargazer")
+library(stargazer)
+install.packages("plyr")
+require(plyr)
+library(plyr)
+
+setwd(("C://Users//casa//Desktop"))
+
+cuestionario<-data.frame(read.dbf("motral2012_cuestionario.dbf"))
+
+
+
+## VARIABLE DEPENDIENTE, AHORRA SI O NO
+
+table(cuestionario$P13)
+cuestionario$P13<-factor(cuestionario$P13,levels = c("0","1","2"), labels=c("OTROS","SI","NO"))
+cuestionario$P13<-revalue(factor(cuestionario$P13))
+  wtd.table(cuestionario$P13,weights = cuestionario$FACTOR)
+
+## EDAD
+
+cuestionario$EDA<-as.character(cuestionario$EDA)
+class(cuestionario$EDA)
+
+cuestionario$EDA[as.numeric(cuestionario$EDA) >= 18 & as.numeric(cuestionario$EDA)<= 30] <- 1
+cuestionario$EDA[as.numeric(cuestionario$EDA) >= 31 & as.numeric(cuestionario$EDA)<= 40] <- 2
+cuestionario$EDA[as.numeric(cuestionario$EDA) >= 41 & as.numeric(cuestionario$EDA)<= 50] <- 3
+cuestionario$EDA[as.numeric(cuestionario$EDA) >= 51 & as.numeric(cuestionario$EDA)<= 60] <- 4
+cuestionario$EDA[as.numeric(cuestionario$EDA) >= 61] <- 5
+
+cuestionario$EDA<-factor(cuestionario$EDA,levels = c("1","2","3","4","5"), labels=c("18-30 AÑOS","31-40 AÑOS","41-50 AÑOS","51-60 AÑOS","MAS DE 60 AÑOS"))
+table(cuestionario$EDA)
+
+## sexo
+
+cuestionario$SEX<-factor(cuestionario$SEX,levels = c("1","2"), labels=c("HOMBRE","MUJER"))
+table(cuestionario$SEX)
+
+##Entidad
+
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("01"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("02"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("03"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("04"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("05"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("06"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("07"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("08"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("10"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("11"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("12"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("13"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("14"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("15"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("17"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("18"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("19"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("20"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("21"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("22"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("23"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("24"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("25"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("26"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("27"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("28"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("29"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("30"=NA))
+cuestionario$ENT<-revalue(factor(cuestionario$ENT),c("31"=NA))
+
+cuestionario$ENT<-factor(cuestionario$ENT,levels = c("32","16"), labels=c("ZACATECAZ","MICHOACAN"))
+table(cuestionario$ENT)
+
+## AFORE 
+
+
+cuestionario$P18<-factor(cuestionario$P18,levels = c("1","2","9"), labels=c("SI","NO","NO SABE"))
+table(cuestionario$P18)
+
+## LUGAR DE AHORRO
+
+cuestionario$P14<-factor(cuestionario$P14,levels = c("1","2","3","4","5","6","7","8"), labels=c("CAB","CIB", "IBR","CAT","CAA","TANDAS","ALCANCIAS","OTROS"))
+table(cuestionario$P14)
+
+
+##AHORRO PARA RETIRO
+
+
+cuestionario$P17<-factor(cuestionario$P17,levels = c("1","2"), labels=c("SI","NO"))
+table(cuestionario$P17)
+
+## RECIBO AFORE
+
+cuestionario$P20<-factor(cuestionario$P20,levels = c("1","2"), labels=c("SI","NO"))
+table(cuestionario$P20)
+
+## CONSULTA
+
+cuestionario$P21<-factor(cuestionario$P21,levels = c("1","2"), labels=c("SI","NO"))
+table(cuestionario$P21)
+
+
+######################################## MODELO ######################################
+
+require(nnet)
+mod1<- multinom(P13~1,data=cuestionario,trace=FALSE)
+modfin<- multinom(P13~ SEX+EDA+P14+P17+P18+P20+P21, data=cuestionario)
+d<-summary(modfin,Wald=T) 
+print(g)
+
+d1<-summary(mod1,Wald=T) 
+print(d1)
+
+s<-stargazer(modfin,type="html",title="coefficients", summary = T)
+h<-stargazer(modfin,type = "text", title = "mlogit", digits=2,out="C://Users//casa//Desktop//DIEGO.txt")
